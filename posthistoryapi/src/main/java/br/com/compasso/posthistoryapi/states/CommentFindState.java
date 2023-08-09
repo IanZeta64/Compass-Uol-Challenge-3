@@ -1,0 +1,23 @@
+package br.com.compasso.posthistoryapi.services.states;
+
+import br.com.compasso.posthistoryapi.entity.History;
+import br.com.compasso.posthistoryapi.enums.Status;
+import br.com.compasso.posthistoryapi.exceptions.ChangeStatusHistoryException;
+import br.com.compasso.posthistoryapi.responses.HistoryDtoResponse;
+import br.com.compasso.posthistoryapi.responses.PostDtoResponse;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class CommentFindState extends PostStateService{
+
+
+  @Override
+  public void handleState(PostDtoResponse postDtoResponse, HistoryDtoResponse history) {
+    if (!history.status().equals(Status.COMMENTS_FIND)) {
+      throw new ChangeStatusHistoryException("");
+    }
+    postDtoResponse.addHistory(history);
+    postDtoResponse.setState(new CommentOkState());
+
+  }
+}

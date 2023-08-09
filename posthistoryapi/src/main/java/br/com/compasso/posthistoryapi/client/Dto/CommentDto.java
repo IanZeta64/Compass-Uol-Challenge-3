@@ -10,7 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class CommentDtoRequest {
+public class CommentDto {
 
   @JsonProperty("id")
   private Long id;
