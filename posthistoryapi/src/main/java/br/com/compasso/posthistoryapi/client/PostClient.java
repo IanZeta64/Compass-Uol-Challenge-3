@@ -1,6 +1,6 @@
 package br.com.compasso.posthistoryapi.client;
-import br.com.compasso.posthistoryapi.client.requests.CommentDtoRequest;
-import br.com.compasso.posthistoryapi.client.requests.PostDtoRequest;
+import br.com.compasso.posthistoryapi.client.Dto.CommentDto;
+import br.com.compasso.posthistoryapi.client.Dto.PostDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +13,10 @@ import java.util.Optional;
 public interface PostClient {
 
   @GetMapping("/{postId}")
-  Optional<PostDtoRequest> findPostById(@PathVariable("postId") Long postId);
+  Optional<PostDto> findPostById(@PathVariable("postId") Long postId);
+
+  @GetMapping
+  Optional<List<PostDto>> findAllPosts();
   @GetMapping("/{postId}/comments")
-  Optional<List<CommentDtoRequest>> findCommentByPostId(@PathVariable("postId") Long postId);
+  Optional<List<CommentDto>> findCommentByPostId(@PathVariable("postId") Long postId);
 }
