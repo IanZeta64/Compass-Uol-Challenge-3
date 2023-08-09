@@ -1,4 +1,4 @@
-package br.com.compasso.posthistoryapi.client.requests;
+package br.com.compasso.posthistoryapi.client.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class PostDtoRequest {
+public class PostDto {
   @JsonProperty("id")
   private Long id;
   @JsonProperty("title")
@@ -18,3 +18,8 @@ public class PostDtoRequest {
   @JsonProperty("body")
   private String body;
 }
+//public record PostDto(
+//  @JsonProperty("id") Long id,
+//  @JsonProperty("title") String title,
+//  @JsonProperty("body") String body
+//) {}
