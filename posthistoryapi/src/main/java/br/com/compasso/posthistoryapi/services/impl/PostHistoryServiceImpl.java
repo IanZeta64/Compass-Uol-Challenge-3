@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PostHistoryHistoryServiceImpl implements PostHistoryService {
+public class PostHistoryServiceImpl implements PostHistoryService {
 
   private final PostClient client;
   private final HistoryRepository historyRepository;
@@ -36,13 +36,19 @@ public class PostHistoryHistoryServiceImpl implements PostHistoryService {
         throw new DuplicatePostException("");
     }
     PostManager postManager = new PostManager(postId);
-    return  createPostHistoryChain(postManager).toResponse();
+    return createPostHistoryChain(postManager).toResponse();
   }
 
 
   @Override
-  public void disable(Long id) {
-
+  public PostDtoResponse disable(Long postId) {
+    if (!historyRepository.existsByPostId(postId)) {
+      throw new HistoryNotFoundException("");
+    }
+    PostManager postManager = postRepostory.findById(postId).map(post ->
+      setDisabledStatus(new PostManager(post)))
+      .orElseThrow(() -> new PostNotFoundException(""));
+    return  postManager.toResponse();
   }
 
   @Override
@@ -75,7 +81,7 @@ public class PostHistoryHistoryServiceImpl implements PostHistoryService {
 
   private PostManager setPostFindStatus(PostManager postManager) {
     Long postId = postManager.getPostId();
-    History history = new History(Status.POST_FIND, postManager.getPostId());
+    History history = new History(Status.POST_FIND, postId);
     postManager.handleState(history);
     historyRepository.save(history);
     Optional<PostDto> request = client.findPostById(postId);
@@ -126,7 +132,7 @@ public class PostHistoryHistoryServiceImpl implements PostHistoryService {
 
   private PostManager setDisabledStatus(PostManager postManager) {
     History history = new History(Status.DISABLED, postManager.getPostId());
-    postManager.handleState(history);
+    postManager.handleDisabled(history);
     historyRepository.save(history);
     return postManager;
   }

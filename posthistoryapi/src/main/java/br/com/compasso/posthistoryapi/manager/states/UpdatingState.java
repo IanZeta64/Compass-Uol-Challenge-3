@@ -13,4 +13,5 @@ public class UpdatingState extends PostStateService {
     postManager.addHistory(history);
     postManager.setState(new PostFindState());
   }
+
 }

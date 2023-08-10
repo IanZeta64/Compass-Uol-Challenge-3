@@ -14,4 +14,14 @@ public class EnabledState extends PostStateService {
     postManager.addHistory(history);
     postManager.setState(new UpdatingState());
   }
+
+//  @Override
+//  public void handleDisabled(PostManager postManager, History history) {
+////    if (!history.getStatus().equals(Status.ENABLED)) {
+////      throw new ChangeStatusHistoryException("");
+////    }
+////    postManager.addHistory(history);
+////    postManager.setState(new DisableState());
+//    super.handleDisabled(postManager,history);
+//  }
 }

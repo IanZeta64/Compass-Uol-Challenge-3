@@ -7,7 +7,7 @@ import java.util.List;
 public interface PostHistoryService {
 
   PostDtoResponse process(Long id);
-  void disable(Long id);
+  PostDtoResponse disable(Long id);
   PostDtoResponse reprocess(Long id);
   List<PostDtoResponse> findAll();
 }

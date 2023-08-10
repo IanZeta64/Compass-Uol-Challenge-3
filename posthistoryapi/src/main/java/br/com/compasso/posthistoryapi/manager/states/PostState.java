@@ -8,5 +8,5 @@ public interface PostState {
 
   void handleState(PostManager post, History history);
 
-//  void handleError(PostManager post, History history);
+  void handleDisabled(PostManager post, History history);
 }

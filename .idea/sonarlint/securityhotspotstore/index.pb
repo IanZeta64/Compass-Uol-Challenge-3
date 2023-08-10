@@ -7,5 +7,3 @@ B
 commentapi/pom.xml,a\6\a6508c16cabe4c56080f54e9bee42efc659526af
 }
 Mposthistoryapi/src/main/java/br/com/compasso/posthistoryapi/enums/Status.java,7\f\7ff37eb0739c87425a122c51d62002344f13294e
-F
-posthistoryapi/pom.xml,d\7\d7c88f5178bcc4eaa158252103444cc26d9bb484

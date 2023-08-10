@@ -11,16 +11,12 @@ import java.time.Instant;
 @Table(name = "history")
 @AllArgsConstructor
 @NoArgsConstructor
-//@SequenceGenerator(name = "history_seq", sequenceName = "history_seq", allocationSize = 1)
 @Getter
 @Setter
 @ToString
-@JsonIgnoreProperties("post")
 public class History {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY
-//    , generator = "history_seq"
-  )
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private Instant date;

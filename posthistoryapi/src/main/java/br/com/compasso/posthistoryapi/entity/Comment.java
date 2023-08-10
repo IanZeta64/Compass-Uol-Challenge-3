@@ -14,13 +14,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@JsonIgnoreProperties("post")
 public class Comment {
 
   @Id
   private Long id;
-//  private String name;
-//  private String email;
   @Column(length = 500)
   private String body;
   @Column(name = "post_id")

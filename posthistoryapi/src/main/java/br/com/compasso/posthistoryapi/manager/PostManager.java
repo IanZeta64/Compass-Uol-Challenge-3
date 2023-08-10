@@ -25,7 +25,6 @@ public class PostManager {
   private PostDto post;
   private List<CommentDto> comments;
   private List<History> histories;
-  @JsonIgnore
   private PostState state;
 
   public PostManager(Long postId) {
@@ -58,6 +57,9 @@ public class PostManager {
   public void setState(PostState state) {this.state = state;}
   public void handleState(History history) {
     state.handleState(this, history);
+  }
+  public void handleDisabled(History history) {
+    state.handleDisabled(this, history);
   }
 
 

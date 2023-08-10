@@ -20,7 +20,8 @@ public class PostHistoryControllerImpl implements PostHistoryController {
 
   @Override
   public ResponseEntity<Void> disable(Long id) {
-    return null;
+    service.disable(id);
+    return ResponseEntity.status(204).build();
   }
 
   @Override
