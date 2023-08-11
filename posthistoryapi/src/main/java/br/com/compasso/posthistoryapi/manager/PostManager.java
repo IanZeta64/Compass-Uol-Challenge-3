@@ -6,13 +6,12 @@ import br.com.compasso.posthistoryapi.entity.Comment;
 import br.com.compasso.posthistoryapi.entity.History;
 import br.com.compasso.posthistoryapi.entity.Post;
 import br.com.compasso.posthistoryapi.enums.Status;
-import br.com.compasso.posthistoryapi.dto.PostDtoResponse;
 import br.com.compasso.posthistoryapi.manager.states.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +19,11 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @ToString
-public class PostManager {
+public class PostManager implements Serializable {
   private Long postId;
   private PostDto post;
   private List<CommentDto> comments;
   private List<History> histories;
-  @JsonIgnore
   private PostState state;
 
   public PostManager(Long postId) {
@@ -46,9 +44,6 @@ public class PostManager {
   public void addHistory(History history){
     this.histories.add(history);
   }
-  public void addHistoryList(List<History> histories){
-    this.histories.addAll(histories);
-  }
   public void setComments(List<CommentDto> comments){
     this.comments = comments;
   }
@@ -59,30 +54,24 @@ public class PostManager {
   public void handleState(History history) {
     state.handleState(this, history);
   }
+  public void handleDisabled(History history) {
+    state.handleDisabled(this, history);
+  }
 
 
-  public Post toEntity(){
+  public Post toPostEntity(){
    return new Post(this.postId, this.post.getTitle(), this.post.getBody(),
       this.comments.stream().map(commentDto ->
         new Comment(commentDto.getId(),
-//        commentDto.getName(),
-//        commentDto.getEmail(),
         commentDto.getBody(),
           postId)).toList(),
       this.histories);
   }
-  public List<Comment> toCommentEntity(){
-    return  this.comments.stream().map(commentDto ->
+  public List<Comment> toCommentEntity() {
+    return this.comments.stream().map(commentDto ->
       new Comment(commentDto.getId(),
-//      commentDto.getName(),
-//      commentDto.getEmail(),
-      commentDto.getBody(),
-      postId)).toList();
-
+        commentDto.getBody(),
+        postId)).toList();
   }
-  public PostDtoResponse toResponse(){
-      return  new PostDtoResponse(this.post, this.comments, this.histories);
-  }
-
 
 }

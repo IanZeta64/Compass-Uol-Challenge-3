@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface PostHistoryService {
 
-  PostDtoResponse process(Long id);
+  void process(Long id) throws InterruptedException;
   void disable(Long id);
-  PostDtoResponse reprocess(Long id);
+  void reprocess(Long id);
   List<PostDtoResponse> findAll();
 }

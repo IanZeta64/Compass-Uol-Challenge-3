@@ -13,20 +13,21 @@ public class PostHistoryControllerImpl implements PostHistoryController {
 
   private final PostHistoryService service;
   @Override
-  public ResponseEntity<PostDtoResponse> process(Long id) {
-    PostDtoResponse response = service.process(id);
-    return ResponseEntity.status(201).body(response);
+  public ResponseEntity<Void> process(Long id) throws InterruptedException {
+    service.process(id);
+    return ResponseEntity.status(201).build();
   }
 
   @Override
   public ResponseEntity<Void> disable(Long id) {
-    return null;
+    service.disable(id);
+    return ResponseEntity.noContent().build();
   }
 
   @Override
-  public ResponseEntity<PostDtoResponse> reprocess(Long id) {
-    PostDtoResponse response = service.reprocess(id);
-    return ResponseEntity.ok(response);
+  public ResponseEntity<Void> reprocess(Long id) {
+    service.reprocess(id);
+    return ResponseEntity.ok().build();
   }
 
   @Override

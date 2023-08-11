@@ -5,22 +5,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
 @Table(name = "history")
 @AllArgsConstructor
 @NoArgsConstructor
-//@SequenceGenerator(name = "history_seq", sequenceName = "history_seq", allocationSize = 1)
 @Getter
 @Setter
 @ToString
-@JsonIgnoreProperties("post")
-public class History {
+public class History implements Serializable {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY
-//    , generator = "history_seq"
-  )
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private Instant date;
