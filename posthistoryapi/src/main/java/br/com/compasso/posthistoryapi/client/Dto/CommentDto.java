@@ -1,5 +1,6 @@
 package br.com.compasso.posthistoryapi.client.Dto;
 
+import br.com.compasso.posthistoryapi.constants.GlobalConstants;
 import br.com.compasso.posthistoryapi.entity.Comment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -7,11 +8,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @ToString
-public class CommentDto {
+public class CommentDto implements Serializable {
+//  @Serial
+//  private static final long serialVersionUID = GlobalConstants.COMMENT_DTO_serialVersionUID;
 
   @JsonProperty("id")
   private Long id;

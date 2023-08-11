@@ -3,6 +3,7 @@ import br.com.compasso.posthistoryapi.client.PostClient;
 import br.com.compasso.posthistoryapi.client.Dto.CommentDto;
 import br.com.compasso.posthistoryapi.client.Dto.PostDto;
 import br.com.compasso.posthistoryapi.dto.PostDtoResponse;
+import br.com.compasso.posthistoryapi.entity.Comment;
 import br.com.compasso.posthistoryapi.entity.History;
 import br.com.compasso.posthistoryapi.entity.Post;
 import br.com.compasso.posthistoryapi.enums.Status;
@@ -61,7 +62,7 @@ public class PostHistoryServiceImpl implements PostHistoryService {
 
   @Override
   public List<PostDtoResponse> findAll() {
-    return postRepostory.findAll().parallelStream().map(PostDtoResponse::new).toList();
+    return postRepostory.findAll().stream().map(PostDtoResponse::new).toList();
   }
 
   @JmsListener(destination = PROCESS_QUEUE)
@@ -72,12 +73,15 @@ public class PostHistoryServiceImpl implements PostHistoryService {
   @JmsListener(destination = REPROCESS_QUEUE)
   private void updatePostHistoryChain(Long postId){
     postRepostory.findById(postId).ifPresentOrElse(post ->
-      setUpdatingStatus(new PostManager(post)), () -> {throw new PostNotFoundException("");});
+      setUpdatingStatus(
+        new PostManager(post)),
+      () -> {throw new PostNotFoundException("");});
   }
   @JmsListener(destination = DISABLE_QUEUE)
   private void disablePostHistoryChain(Long postId){
     postRepostory.findById(postId).ifPresentOrElse(post ->
-      setDisabledStatus(new PostManager(post)), () -> {throw new PostNotFoundException("");});
+      setDisabledStatus(new PostManager(post)),
+      () -> {throw new PostNotFoundException("");});
   }
   private void createHistoryStatus(PostManager postManager){
     postRepostory.save(new Post(postManager.getPostId()));
@@ -92,15 +96,15 @@ public class PostHistoryServiceImpl implements PostHistoryService {
     postManager.handleState(history);
     historyRepository.save(history);
     client.findPostById(postId)
-        .ifPresentOrElse(postFound -> setPostOkStatus(postManager, postFound),
+        .ifPresentOrElse(postFound ->
+            setPostOkStatus(postManager, postFound),
           () -> setFailedStatus(postManager));
   }
 
   private void setPostOkStatus(PostManager postManager, PostDto postFound) {
-    postManager.setPost(postFound);
     History history = historyRepository.save(new History(Status.POST_OK, postManager.getPostId()));
     postManager.handleState(history);
-    postRepostory.save(postManager.toPostEntity());
+    postRepostory.save(new Post(postFound, postManager.getHistories()));
     setCommentFindStatus(postManager);
   }
 
@@ -115,11 +119,13 @@ public class PostHistoryServiceImpl implements PostHistoryService {
   }
 
   private void setCommentOkStatus(PostManager postManager, List<CommentDto> commentFound) {
-    postManager.setComments(commentFound);
+
     History history = new History(Status.COMMENTS_OK, postManager.getPostId());
     postManager.handleState(history);
     historyRepository.save(history);
-    commentRepository.saveAll(postManager.toCommentEntity());
+    var commentList = commentFound.stream().map(commentDto ->
+      new Comment(commentDto, postManager.getPostId())).toList();
+    commentRepository.saveAll(commentList);
      setEnabledStatus(postManager);
   }
 
@@ -138,8 +144,8 @@ public class PostHistoryServiceImpl implements PostHistoryService {
 
   private void setDisabledStatus(PostManager postManager) {
     History history = new History(Status.DISABLED, postManager.getPostId());
-    postManager.handleDisabled(history);
     historyRepository.save(history);
+    postManager.handleDisabled(history);
   }
 
   private void setUpdatingStatus(PostManager postManager) {

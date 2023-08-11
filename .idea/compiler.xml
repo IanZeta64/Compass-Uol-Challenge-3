@@ -7,13 +7,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="postsearchapi" />
         <module name="serverdiscovery" />
         <module name="posthistoryapi" />
-        <module name="requestpublisherapi" />
-        <module name="commentsearchapi" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="commentsearchapi" target="17" />
+      <module name="postsearchapi" target="17" />
+      <module name="requestpublisherapi" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

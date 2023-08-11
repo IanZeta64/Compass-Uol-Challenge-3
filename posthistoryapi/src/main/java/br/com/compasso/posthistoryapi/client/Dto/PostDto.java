@@ -1,16 +1,22 @@
 package br.com.compasso.posthistoryapi.client.Dto;
 
+import br.com.compasso.posthistoryapi.constants.GlobalConstants;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @ToString
-public class PostDto {
+public class PostDto implements Serializable {
+//  @Serial
+//  private static final long serialVersionUID = GlobalConstants.POST_DTO_serialVersionUID;
   @JsonProperty("id")
   private Long id;
   @JsonProperty("title")

@@ -2,6 +2,7 @@ package br.com.compasso.posthistoryapi.manager;
 
 import br.com.compasso.posthistoryapi.client.Dto.CommentDto;
 import br.com.compasso.posthistoryapi.client.Dto.PostDto;
+import br.com.compasso.posthistoryapi.constants.GlobalConstants;
 import br.com.compasso.posthistoryapi.entity.Comment;
 import br.com.compasso.posthistoryapi.entity.History;
 import br.com.compasso.posthistoryapi.entity.Post;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,35 +22,24 @@ import java.util.List;
 @Getter
 @ToString
 public class PostManager implements Serializable {
+  @Serial
+  private static final long serialVersionUID = GlobalConstants.POST_MANAGER_serialVersionUID;
   private Long postId;
-  private PostDto post;
-  private List<CommentDto> comments;
+  @Getter
   private List<History> histories;
   private PostState state;
 
   public PostManager(Long postId) {
     this.postId = postId;
-    this.post = new PostDto();
-    this.comments = new ArrayList<>();
-    this.histories = new ArrayList<>();
     this.state = new CreatedState();
+    this.histories = new ArrayList<>();
   }
   public PostManager(Post post) {
     this.postId = post.getId();
-    this.post = new PostDto(post.getId(), post.getTitle(), post.getBody());
-    this.comments = post.getComments().stream().map(CommentDto::new).toList();
-    this.histories = post.getHistories();
     Status status = post.getHistories().get(post.getHistories().size()-1).getStatus();
-    if (status.equals(Status.ENABLED) || status.equals(Status.DISABLED)) this.state = new UpdatingState();
-  }
-  public void addHistory(History history){
-    this.histories.add(history);
-  }
-  public void setComments(List<CommentDto> comments){
-    this.comments = comments;
-  }
-  public void setPost(PostDto post){
-    this.post = post;
+    if (status.equals(Status.ENABLED) || status.equals(Status.DISABLED))
+      this.state = new UpdatingState();
+    this.histories = post.getHistories();
   }
   public void setState(PostState state) {this.state = state;}
   public void handleState(History history) {
@@ -57,21 +48,31 @@ public class PostManager implements Serializable {
   public void handleDisabled(History history) {
     state.handleDisabled(this, history);
   }
+  public void addHistory(History history) {
+    this.histories.add(history);
+  }
+
+//  public void setComments(List<CommentDto> comments){
+//    this.comments = comments;
+//  }
+//  public void setPost(PostDto post){
+//    this.post = post;
+//  }
 
 
-  public Post toPostEntity(){
-   return new Post(this.postId, this.post.getTitle(), this.post.getBody(),
-      this.comments.stream().map(commentDto ->
-        new Comment(commentDto.getId(),
-        commentDto.getBody(),
-          postId)).toList(),
-      this.histories);
-  }
-  public List<Comment> toCommentEntity() {
-    return this.comments.stream().map(commentDto ->
-      new Comment(commentDto.getId(),
-        commentDto.getBody(),
-        postId)).toList();
-  }
+//  public Post toPostEntity(){
+//   return new Post(this.postId, this.post.getTitle(), this.post.getBody(),
+//      this.comments.stream().map(commentDto ->
+//        new Comment(commentDto.getId(),
+//        commentDto.getBody(),
+//          postId)).toList(),
+//      this.histories);
+//  }
+//  public List<Comment> toCommentEntity() {
+//    return this.comments.stream().map(commentDto ->
+//      new Comment(commentDto.getId(),
+//        commentDto.getBody(),
+//        postId)).toList();
+//  }
 
 }
