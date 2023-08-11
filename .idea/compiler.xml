@@ -7,16 +7,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="commentapi" />
+        <module name="postsearchapi" />
         <module name="serverdiscovery" />
         <module name="posthistoryapi" />
+        <module name="requestpublisherapi" />
+        <module name="commentsearchapi" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="commentapi" options="-parameters" />
+      <module name="commentsearchapi" options="-parameters" />
       <module name="posthistoryapi" options="-parameters" />
+      <module name="postsearchapi" options="-parameters" />
+      <module name="requestpublisherapi" options="-parameters" />
       <module name="serverdiscovery" options="-parameters" />
     </option>
   </component>

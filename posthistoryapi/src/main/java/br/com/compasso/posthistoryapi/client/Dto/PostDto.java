@@ -18,8 +18,4 @@ public class PostDto {
   @JsonProperty("body")
   private String body;
 }
-//public record PostDto(
-//  @JsonProperty("id") Long id,
-//  @JsonProperty("title") String title,
-//  @JsonProperty("body") String body
-//) {}
+

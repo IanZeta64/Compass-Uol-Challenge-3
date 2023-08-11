@@ -13,10 +13,10 @@ import java.util.List;
 public interface PostHistoryController {
 
   @PostMapping("/{id}")
-  ResponseEntity<PostDtoResponse> process(@PathVariable
+  ResponseEntity<Void> process(@PathVariable
             @Min(value = 1, message = "post id must be at least 1")
             @Max(value = 100, message = "post id must be at most 100")
-                               Long id);
+                               Long id) throws InterruptedException;
 
   @DeleteMapping("/{id}")
   ResponseEntity<Void> disable(@PathVariable
@@ -25,7 +25,7 @@ public interface PostHistoryController {
                                Long id);
 
   @PutMapping("/{id}")
-  ResponseEntity<PostDtoResponse> reprocess(@PathVariable
+  ResponseEntity<Void> reprocess(@PathVariable
                                @Min(value = 1, message = "post id must be at least 1")
                                @Max(value = 100, message = "post id must be at most 100")
                                  Long id);
