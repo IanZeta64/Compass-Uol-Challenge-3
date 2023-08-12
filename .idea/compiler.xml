@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="serverdiscovery" />
         <module name="posthistoryapi" />
+        <module name="posthistoryreactiveapi" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -21,6 +22,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="commentsearchapi" options="-parameters" />
       <module name="posthistoryapi" options="-parameters" />
+      <module name="posthistoryreactiveapi" options="-parameters" />
       <module name="postsearchapi" options="-parameters" />
       <module name="requestpublisherapi" options="-parameters" />
       <module name="serverdiscovery" options="-parameters" />

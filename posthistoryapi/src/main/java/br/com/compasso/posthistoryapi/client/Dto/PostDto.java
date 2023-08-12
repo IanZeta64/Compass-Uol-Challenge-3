@@ -14,9 +14,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @ToString
-public class PostDto implements Serializable {
-//  @Serial
-//  private static final long serialVersionUID = GlobalConstants.POST_DTO_serialVersionUID;
+public class PostDto  {
+
   @JsonProperty("id")
   private Long id;
   @JsonProperty("title")

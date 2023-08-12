@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/commentsearchapi/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/posthistoryapi/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/posthistoryreactiveapi/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/postsearchapi/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/requestpublisherapi/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/serverdiscovery/src/main/java" charset="UTF-8" />

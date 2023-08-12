@@ -17,11 +17,8 @@ import java.time.Instant;
 @Getter
 @Setter
 @ToString
-public class History implements Serializable {
-//  @Serial
-//  @JsonIgnore
-//  @Transient
-//  private static final long serialVersionUID = GlobalConstants.HISTORY_serialVersionUID;
+public class History  {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

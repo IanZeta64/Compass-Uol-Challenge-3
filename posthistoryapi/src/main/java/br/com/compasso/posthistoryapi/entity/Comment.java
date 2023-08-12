@@ -17,12 +17,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Comment implements Serializable {
+public class Comment  {
 
-//  @Serial
-//  @JsonIgnore
-//  @Transient
-//  private static final long serialVersionUID = GlobalConstants.COMMENT_serialVersionUID;
 
   @Id
   private Long id;

@@ -15,9 +15,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @ToString
-public class CommentDto implements Serializable {
-//  @Serial
-//  private static final long serialVersionUID = GlobalConstants.COMMENT_DTO_serialVersionUID;
+public class CommentDto  {
+
 
   @JsonProperty("id")
   private Long id;

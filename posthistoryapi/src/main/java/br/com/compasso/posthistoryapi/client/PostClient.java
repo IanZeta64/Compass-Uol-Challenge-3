@@ -13,10 +13,10 @@ import java.util.Optional;
 public interface PostClient {
 
   @GetMapping("/{postId}")
-  Optional<PostDto> findPostById(@PathVariable("postId") Long postId);
+  PostDto findPostById(@PathVariable("postId") Long postId);
 
   @GetMapping
-  Optional<List<PostDto>> findAllPosts();
+  List<PostDto> findAllPosts();
   @GetMapping("/{postId}/comments")
-  Optional<List<CommentDto>> findCommentByPostId(@PathVariable("postId") Long postId);
+  List<CommentDto> findCommentByPostId(@PathVariable("postId") Long postId);
 }

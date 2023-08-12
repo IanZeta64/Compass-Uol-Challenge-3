@@ -22,11 +22,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @JsonIgnoreProperties({"histories", "comments"})
-public class Post implements Serializable {
-//  @Serial
-//  @JsonIgnore
-//  @Transient
-//  private static final long serialVersionUID = GlobalConstants.POST_serialVersionUID;
+public class Post  {
+
   @Id
   private Long id;
   private String title;
@@ -41,15 +38,16 @@ public class Post implements Serializable {
 
   public Post(Long id) {
     this.id = id;
+
     this.comments = new ArrayList<>();
     this.histories = new ArrayList<>();
   }
 
-//  public Post(Long id, List<History> histories) {
-//    this.id = id;
-//    this.comments = new ArrayList<>();
-//    this.histories = histories;
-//  }
+  public Post(Long id, List<History> histories) {
+    this.id = id;
+    this.comments = new ArrayList<>();
+    this.histories = histories;
+  }
 
   public Post(PostDto postDto, List<History> histories) {
     this.id = postDto.getId();
