@@ -1,4 +1,4 @@
-package br.com.compasso.userapi;
+package br.com.compasso.userauthenticationapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

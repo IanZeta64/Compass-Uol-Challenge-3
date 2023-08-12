@@ -11,6 +11,8 @@
         <option value="$PROJECT_DIR$/requestpublisherapi/pom.xml" />
         <option value="$PROJECT_DIR$/postsearchapi/pom.xml" />
         <option value="$PROJECT_DIR$/posthistoryreactiveapi/pom.xml" />
+        <option value="$PROJECT_DIR$/userapi/pom.xml" />
+        <option value="$PROJECT_DIR$/gatewayapi/pom.xml" />
       </list>
     </option>
   </component>
