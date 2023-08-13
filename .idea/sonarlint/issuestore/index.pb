@@ -9,5 +9,3 @@ I
 dposthistoryapi/src/main/java/br/com/compasso/posthistoryapi/exceptions/CommentNotFoundException.java,7\c\7ccbc536e4bf93b787d8d2bf3cfd2a597cad7047
 ’
 bposthistoryapi/src/main/java/br/com/compasso/posthistoryapi/exceptions/DuplicatePostException.java,6\b\6b2c084c746b93cff92497b208185175c2660523
-”
-dposthistoryapi/src/main/java/br/com/compasso/posthistoryapi/exceptions/HistoryNotFoundException.java,9\a\9a2c806dd76dcd8479e2f478af9e91584584dace
