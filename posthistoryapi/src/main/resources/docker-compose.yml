@@ -1,0 +1,7 @@
+version: '3'
+services:
+  activemq:
+    image: webcenter/activemq:latest  # Usando a imagem oficial do ActiveMQ
+    ports:
+      - "61616:61616"  # Porta para acesso ao ActiveMQ
+      - "8161:8161"    # Porta para acesso ao console administrativo

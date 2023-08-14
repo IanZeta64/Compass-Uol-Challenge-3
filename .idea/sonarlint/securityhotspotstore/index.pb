@@ -101,8 +101,6 @@ Rposthistoryapi/src/main/java/br/com/compasso/posthistoryapi/client/PostClient.j
 Tposthistoryapi/src/main/java/br/com/compasso/posthistoryapi/dto/PostDtoResponse.java,5\f\5f88a87e1f700398feebfa8ce708cee2aa02871e
 }
 Mposthistoryapi/src/main/java/br/com/compasso/posthistoryapi/enums/Status.java,7\f\7ff37eb0739c87425a122c51d62002344f13294e
-â
-Yposthistoryapi/src/main/java/br/com/compasso/posthistoryapi/message/config/JmsConfig.java,0\c\0c49006544a896e21e46ebfdc5e6b760b58f4b2b
 è
 _posthistoryapi/src/main/java/br/com/compasso/posthistoryapi/repositories/CommentRepository.java,a\f\af8b7810018eb9b77eeb33adfca2302f55d33114
 è
