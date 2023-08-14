@@ -1,6 +1,6 @@
 # Challenge 3: PostHistoryApi
 
-The main goal of this project is to apply asynchronous programming to enhance the application's performance. The application is designed to save each state of a Post object. Each Post object contains a list of Comment objects. Each state is then saved as a History object. The History objects are stored as a List of History associated with the Post object. Transitions between states are restricted, and implementing asynchronous logic for these transitions presents an interesting challenge. The project also utilizes the State design pattern to control state transitions, ensuring they only move to allowed states. Moreover, the application leverages messaging with ActiveMQ to improve performance. Spring Security with CORS, CSRF, and JWT is also integrated, providing user registration, authentication, and authorization.
+The main goal of this project is to apply asynchronous programming to enhance the application's performance. The application is designed to save each state of a Post object and each post object contains a list of Comment objects and list ob History objects, generated in each state. The transitions between states are restricted, and implementing asynchronous logic for these transitions presents an interesting challenge. The project also utilizes the desing patterns STATE to control state transitions, ensuring they only move to allowed states. Moreover, the application leverages messaging with ActiveMQ to improve performance. Spring Security with CORS, CSRF, and JWT is also integrated, providing user registration, authentication, and authorization.
 
 ## Application Requirements:
 - IntelliJ or Eclipse installed
@@ -60,3 +60,14 @@ Follow these steps to ensure successful requests and authentication.
 - To disable an existing post, send a DELETE request to the endpoint `/posts/{postId}` to generate a history record indicating the post's deactivation. Only previously processed IDs will be accepted.
 - To retrieve all posts, including their histories and comments, send a GET request to the endpoint `/posts`.
 
+## Disabling Security (For Testing Purposes)
+
+For the purpose of testing efficiency and load, you may consider temporarily disabling Spring Security. Follow these steps:
+
+1. Navigate to the directory `posthistoryapi/src/main/java/br/com/compasso/posthistoryapi/security/config`.
+2. Comment out all the Java code in the file `WebSecurityConfig.java`.
+3. Uncomment the code in the file `WebSecurityConfigDisable.java`.
+
+By performing the above steps, any requests will be accepted without authentication. This allows you to test the flow and performance of the application more freely.
+
+Remember to re-enable Spring Security before deploying the application to production environments.
