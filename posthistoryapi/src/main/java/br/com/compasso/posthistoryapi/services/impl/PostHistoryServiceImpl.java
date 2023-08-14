@@ -1,14 +1,14 @@
 package br.com.compasso.posthistoryapi.services.impl;
 
 import br.com.compasso.posthistoryapi.client.PostClient;
-import br.com.compasso.posthistoryapi.client.Dto.CommentDto;
-import br.com.compasso.posthistoryapi.client.Dto.PostDto;
+import br.com.compasso.posthistoryapi.client.dto.CommentDto;
+import br.com.compasso.posthistoryapi.client.dto.PostDto;
 import br.com.compasso.posthistoryapi.dto.PostDtoResponse;
 import br.com.compasso.posthistoryapi.entity.Comment;
 import br.com.compasso.posthistoryapi.entity.History;
 import br.com.compasso.posthistoryapi.entity.Post;
 import br.com.compasso.posthistoryapi.exceptions.exceptionclass.*;
-import br.com.compasso.posthistoryapi.statemanager.PostStateManager;
+import br.com.compasso.posthistoryapi.state.PostStateManager;
 import br.com.compasso.posthistoryapi.message.publisher.MessageProducer;
 import br.com.compasso.posthistoryapi.repositories.CommentRepository;
 import br.com.compasso.posthistoryapi.repositories.HistoryRepository;
@@ -32,7 +32,7 @@ public class PostHistoryServiceImpl implements PostHistoryService {
 
     private final PostClient client;
     private final HistoryRepository historyRepository;
-    private final PostRepostory postRepostory;
+    private final PostRepostory postRepository;
     private final CommentRepository commentRepository;
     private final MessageProducer mqProducer;
 
@@ -41,8 +41,8 @@ public class PostHistoryServiceImpl implements PostHistoryService {
     @Async
     public void process(Long postId) {
         log.info("PROCESS - checking for exists post -{}", postId);
-        if (postRepostory.existsById(postId)) {
-            throw new DuplicatePostException("");
+        if (postRepository.existsById(postId)) {
+            throw new DuplicatePostException("Post already processed.");
         }
         createPostHistoryChain(postId);
     }
@@ -52,8 +52,8 @@ public class PostHistoryServiceImpl implements PostHistoryService {
     @Async
     public void disable(Long postId) {
         log.info("DISABLE - checking for exists post -{}", postId);
-        if (!postRepostory.existsById(postId)) {
-            throw new HistoryNotFoundException("");
+        if (!postRepository.existsById(postId)) {
+            throw new HistoryNotFoundException("Register of post not found.");
         }
         disablePostHistoryChain(postId);
     }
@@ -62,8 +62,8 @@ public class PostHistoryServiceImpl implements PostHistoryService {
     @Async
     public void reprocess(Long postId) {
         log.info("REPROCESS - checking for exists post -{}", postId);
-        if (!postRepostory.existsById(postId)) {
-            throw new HistoryNotFoundException("");
+        if (!postRepository.existsById(postId)) {
+            throw new HistoryNotFoundException("Register of post not found.");
         }
         updatePostHistoryChain(postId);
     }
@@ -71,7 +71,7 @@ public class PostHistoryServiceImpl implements PostHistoryService {
     @Override
     public List<PostDtoResponse> findAll() {
         log.info("QUERY - Getting all posts");
-        return postRepostory.findAll().parallelStream().map(PostDtoResponse::new).toList();
+        return postRepository.findAll().parallelStream().map(PostDtoResponse::new).toList();
     }
     @Async
     public void createPostHistoryChain(Long postId) {
@@ -82,25 +82,25 @@ public class PostHistoryServiceImpl implements PostHistoryService {
     @Async
     public void updatePostHistoryChain(Long postId) {
         log.info("PROCESS - Updating post -{}", postId);
-        postRepostory.findById(postId).ifPresentOrElse(post ->
+        postRepository.findById(postId).ifPresentOrElse(post ->
                         setUpdatingStatus(new PostStateManager(post, REPROCESS_QUEUE)),
                 () -> {
-                    throw new PostNotFoundException("");
+                    throw new PostNotFoundException("Post not found yet. Try later.");
                 });
     }
     @Async
     public void disablePostHistoryChain(Long postId) {
         log.info("PROCESS - Disabling post -{}", postId);
-        postRepostory.findById(postId).ifPresentOrElse(post ->
+        postRepository.findById(postId).ifPresentOrElse(post ->
                         setDisabledStatus(new PostStateManager(post, DISABLE_QUEUE)),
                 () -> {
-                    throw new PostNotFoundException("");
+                    throw new PostNotFoundException("Post not found yet. Try later.");
                 });
     }
     @Async
     public void createHistoryStatus(PostStateManager postStateManager) {
         postStateManager.handleState();
-        postRepostory.save(new Post(postStateManager.getPostId(), postStateManager.getHistories()));
+        postRepository.save(new Post(postStateManager.getPostId(), postStateManager.getHistories()));
         setPostFindStatus(postStateManager);
         log.info("CREATED - Created new history post -{}", postStateManager.getPostId());
     }
@@ -123,7 +123,7 @@ public class PostHistoryServiceImpl implements PostHistoryService {
     public void setPostOkStatus(PostStateManager postStateManager, PostDto postFound) {
         log.info("POST_OK - Post founded post -{}", postStateManager.getPostId());
         postStateManager.handleState();
-        postRepostory.save(new Post(postFound, postStateManager.getHistories()));
+        postRepository.save(new Post(postFound, postStateManager.getHistories()));
 
     }
     @Async

@@ -1,10 +1,10 @@
 package br.com.compasso.posthistoryapi.services;
 
-import br.com.compasso.posthistoryapi.client.Dto.CommentDto;
-import br.com.compasso.posthistoryapi.client.Dto.PostDto;
+import br.com.compasso.posthistoryapi.client.dto.CommentDto;
+import br.com.compasso.posthistoryapi.client.dto.PostDto;
 import br.com.compasso.posthistoryapi.dto.PostDtoResponse;
 import br.com.compasso.posthistoryapi.entity.History;
-import br.com.compasso.posthistoryapi.statemanager.PostStateManager;
+import br.com.compasso.posthistoryapi.state.PostStateManager;
 
 import java.util.List;
 

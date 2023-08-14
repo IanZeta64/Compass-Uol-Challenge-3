@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table("post")
+@Document
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -17,24 +19,31 @@ import java.util.List;
 public class Post {
 
   @Id
-  private Long id;
-
+  private String id;
+//  @Indexed(unique = true)
+  private Long postId;
   private String title;
   private String body;
 
-  @Column("post_id")
+  @Field("comments")
   private List<Comment> comments = new ArrayList<>();
-  @Column("post_id")
+
+  @Field("histories")
   private List<History> histories = new ArrayList<>();
 
-  public Post(Long id) {
-    this.id = id;
+  public Post(Long postId) {
+    this.postId = postId;
     this.comments = new ArrayList<>();
     this.histories = new ArrayList<>();
   }
+  public Post(Long postId, List<History> histories) {
+    this.postId = postId;
+    this.comments = new ArrayList<>();
+    this.histories = histories;
+  }
 
   public Post(PostDto postDto, List<History> histories) {
-    this.id = postDto.id();
+    this.postId = postDto.postId();
     this.title = postDto.title();
     this.body = postDto.body();
     this.comments = new ArrayList<>();

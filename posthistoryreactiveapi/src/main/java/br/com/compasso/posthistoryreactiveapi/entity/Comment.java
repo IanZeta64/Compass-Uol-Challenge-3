@@ -6,32 +6,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 
 //@Entity
 
-  @Table(name = "comment")
+  @Document
   @NoArgsConstructor
   @AllArgsConstructor
   @Getter
   @Setter
   public class Comment {
 
-
     @Id
-    private Long id;
-
-//    @Column(length = 500)
+    private String id;
+    @Indexed(unique = true)
+    private Long commentId;
     private String body;
-    @Column(value = "post_id")
-    Long postId;
+    private Long postId;
 
     public Comment(CommentDto commentDto, Long postId) {
-      this.id = commentDto.id();
+      this.commentId = commentDto.commentId();
       this.body = commentDto.body();
       this.postId = postId;
     }
 
-}
+  }
