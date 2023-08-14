@@ -1,10 +1,12 @@
 package br.com.compasso.posthistoryapi.entity;
+import br.com.compasso.posthistoryapi.constants.GlobalConstants;
 import br.com.compasso.posthistoryapi.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -15,7 +17,9 @@ import java.time.Instant;
 @Getter
 @Setter
 @ToString
-public class History implements Serializable {
+@EqualsAndHashCode
+public class History  {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

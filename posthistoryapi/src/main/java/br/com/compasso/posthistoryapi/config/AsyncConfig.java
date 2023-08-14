@@ -10,13 +10,13 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class AsyncConfig {
 
-  @Bean(name = "asyncExecutor")
-  public Executor asyncExecutor() {
+  @Bean
+  public Executor taskExecutor() {
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-    executor.setCorePoolSize(5);
-    executor.setMaxPoolSize(10);
-    executor.setQueueCapacity(25);
-    executor.setThreadNamePrefix("AsyncThread-");
+    executor.setCorePoolSize(2);
+    executor.setMaxPoolSize(2);
+    executor.setQueueCapacity(500);
+    executor.setThreadNamePrefix("GithubLookup-");
     executor.initialize();
     return executor;
   }
