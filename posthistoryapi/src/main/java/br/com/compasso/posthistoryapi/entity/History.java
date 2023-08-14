@@ -17,6 +17,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class History  {
 
   @Id

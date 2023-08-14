@@ -1,10 +1,10 @@
-package br.com.compasso.posthistoryapi.manager;
+package br.com.compasso.posthistoryapi.statemanager;
 
 import br.com.compasso.posthistoryapi.constants.GlobalConstants;
 import br.com.compasso.posthistoryapi.entity.History;
 import br.com.compasso.posthistoryapi.entity.Post;
 import br.com.compasso.posthistoryapi.enums.Status;
-import br.com.compasso.posthistoryapi.manager.states.*;
+import br.com.compasso.posthistoryapi.statemanager.states.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

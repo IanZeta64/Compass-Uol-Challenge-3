@@ -7,22 +7,17 @@ import br.com.compasso.posthistoryapi.dto.PostDtoResponse;
 import br.com.compasso.posthistoryapi.entity.Comment;
 import br.com.compasso.posthistoryapi.entity.History;
 import br.com.compasso.posthistoryapi.entity.Post;
-import br.com.compasso.posthistoryapi.enums.Status;
-import br.com.compasso.posthistoryapi.exceptions.CommentNotFoundException;
-import br.com.compasso.posthistoryapi.exceptions.DuplicatePostException;
-import br.com.compasso.posthistoryapi.exceptions.HistoryNotFoundException;
-import br.com.compasso.posthistoryapi.exceptions.PostNotFoundException;
-import br.com.compasso.posthistoryapi.manager.PostManager;
-import br.com.compasso.posthistoryapi.manager.states.FailedState;
+import br.com.compasso.posthistoryapi.exceptions.exceptionclass.*;
+import br.com.compasso.posthistoryapi.statemanager.PostStateManager;
 import br.com.compasso.posthistoryapi.message.publisher.MessageProducer;
 import br.com.compasso.posthistoryapi.repositories.CommentRepository;
 import br.com.compasso.posthistoryapi.repositories.HistoryRepository;
 import br.com.compasso.posthistoryapi.repositories.PostRepostory;
 import br.com.compasso.posthistoryapi.services.PostHistoryService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,7 +36,9 @@ public class PostHistoryServiceImpl implements PostHistoryService {
     private final CommentRepository commentRepository;
     private final MessageProducer mqProducer;
 
+
     @Override
+    @Async
     public void process(Long postId) {
         log.info("PROCESS - checking for exists post -{}", postId);
         if (postRepostory.existsById(postId)) {
@@ -52,6 +49,7 @@ public class PostHistoryServiceImpl implements PostHistoryService {
 
 
     @Override
+    @Async
     public void disable(Long postId) {
         log.info("DISABLE - checking for exists post -{}", postId);
         if (!postRepostory.existsById(postId)) {
@@ -61,6 +59,7 @@ public class PostHistoryServiceImpl implements PostHistoryService {
     }
 
     @Override
+    @Async
     public void reprocess(Long postId) {
         log.info("REPROCESS - checking for exists post -{}", postId);
         if (!postRepostory.existsById(postId)) {
@@ -74,117 +73,116 @@ public class PostHistoryServiceImpl implements PostHistoryService {
         log.info("QUERY - Getting all posts");
         return postRepostory.findAll().parallelStream().map(PostDtoResponse::new).toList();
     }
-
-    private void createPostHistoryChain(Long postId) {
+    @Async
+    public void createPostHistoryChain(Long postId) {
         log.info("PROCESS - Creating new history post -{}", postId);
-        PostManager postManager = new PostManager(postId);
-        createHistoryStatus(postManager);
+        PostStateManager postStateManager = new PostStateManager(postId);
+        createHistoryStatus(postStateManager);
     }
-
-    private void updatePostHistoryChain(Long postId) {
+    @Async
+    public void updatePostHistoryChain(Long postId) {
         log.info("PROCESS - Updating post -{}", postId);
         postRepostory.findById(postId).ifPresentOrElse(post ->
-                        setUpdatingStatus(new PostManager(post, REPROCESS_QUEUE)),
+                        setUpdatingStatus(new PostStateManager(post, REPROCESS_QUEUE)),
                 () -> {
                     throw new PostNotFoundException("");
                 });
     }
-
-    private void disablePostHistoryChain(Long postId) {
+    @Async
+    public void disablePostHistoryChain(Long postId) {
         log.info("PROCESS - Disabling post -{}", postId);
         postRepostory.findById(postId).ifPresentOrElse(post ->
-                        setDisabledStatus(new PostManager(post, DISABLE_QUEUE)),
+                        setDisabledStatus(new PostStateManager(post, DISABLE_QUEUE)),
                 () -> {
                     throw new PostNotFoundException("");
                 });
     }
-
-    private void createHistoryStatus(PostManager postManager) {
-        postManager.handleState();
-        postRepostory.save(new Post(postManager.getPostId(), postManager.getHistories()));
-        setPostFindStatus(postManager);
-        log.info("CREATED - Created new history post -{}", postManager.getPostId());
+    @Async
+    public void createHistoryStatus(PostStateManager postStateManager) {
+        postStateManager.handleState();
+        postRepostory.save(new Post(postStateManager.getPostId(), postStateManager.getHistories()));
+        setPostFindStatus(postStateManager);
+        log.info("CREATED - Created new history post -{}", postStateManager.getPostId());
     }
-
-    private void setPostFindStatus(PostManager postManager) {
-        log.info("POST_FIND - Finding post -{}", postManager.getPostId());
+    @Async
+    public void setPostFindStatus(PostStateManager postStateManager) {
+        log.info("POST_FIND - Finding post -{}", postStateManager.getPostId());
         try {
-            PostDto postFound = client.findPostById(postManager.getPostId());
-            History history = postManager.handleState();
+            PostDto postFound = client.findPostById(postStateManager.getPostId());
+            History history = postStateManager.handleState();
             historyRepository.save(history);
-            setPostOkStatus(postManager, postFound);
-            mqProducer.sendMessage(POST_OK_QUEUE, postManager.getPostId());
+            setPostOkStatus(postStateManager, postFound);
+            mqProducer.sendMessage(POST_OK_QUEUE, postStateManager.getPostId());
         } catch (Exception e) {
-            History historyFailed = postManager.handleFailed();
+            History historyFailed = postStateManager.handleFailed();
             historyRepository.save(historyFailed);
-            mqProducer.sendMessage(FAILED_QUEUE, postManager.getPostId());
+            mqProducer.sendObjectMessage(FAILED_QUEUE, historyFailed);
         }
-
+    }
+    @Async
+    public void setPostOkStatus(PostStateManager postStateManager, PostDto postFound) {
+        log.info("POST_OK - Post founded post -{}", postStateManager.getPostId());
+        postStateManager.handleState();
+        postRepostory.save(new Post(postFound, postStateManager.getHistories()));
 
     }
-
-    private void setPostOkStatus(PostManager postManager, PostDto postFound) {
-        log.info("POST_OK - Post founded post -{}", postManager.getPostId());
-        postManager.handleState();
-        postRepostory.save(new Post(postFound, postManager.getHistories()));
-
-    }
-
+    @Async
     @JmsListener(destination = POST_OK_QUEUE)
-    private void setCommentFindStatus(Long postId) {
+    public void setCommentFindStatus(Long postId) {
         log.info("COMMENT_FIND - Finding comments for post -{}", postId);
-        PostManager postManager = new PostManager(new Post(postId), POST_OK_QUEUE);
+        PostStateManager postStateManager = new PostStateManager(new Post(postId), POST_OK_QUEUE);
         try {
-            List<CommentDto> commentFound = client.findCommentByPostId(postManager.getPostId());
-            History history = postManager.handleState();
+            List<CommentDto> commentFound = client.findCommentByPostId(postStateManager.getPostId());
+            History history = postStateManager.handleState();
             historyRepository.save(history);
-            setCommentOkStatus(postManager, commentFound);
+            setCommentOkStatus(postStateManager, commentFound);
         } catch (Exception e) {
-           History historyFailed = postManager.handleFailed();
+            History historyFailed = postStateManager.handleFailed();
             historyRepository.save(historyFailed);
-            setFailedStatus(postManager);
-            throw new CommentNotFoundException("");
+            setFailedStatus(postStateManager);
         }
 
     }
-
-    private void setCommentOkStatus(PostManager postManager, List<CommentDto> commentFound) {
-        log.info("COMMENT_OK - Comments founded for post -{}", postManager.getPostId());
-        History history = postManager.handleState();
+    @Async
+    public void setCommentOkStatus(PostStateManager postStateManager, List<CommentDto> commentFound) {
+        log.info("COMMENT_OK - Comments founded for post -{}", postStateManager.getPostId());
+        History history = postStateManager.handleState();
         historyRepository.save(history);
         commentRepository.saveAll(commentFound.stream().
-                map(commentDto -> new Comment(commentDto, postManager.getPostId())).toList());
-        setEnabledStatus(postManager);
+                map(commentDto -> new Comment(commentDto, postStateManager.getPostId())).toList());
+        setEnabledStatus(postStateManager);
     }
-
-    private void setEnabledStatus(PostManager postManager) {
-        log.info("ENABLED - Enabled post -{}", postManager.getPostId());
-        History history = postManager.handleState();
+    @Async
+    public void setEnabledStatus(PostStateManager postStateManager) {
+        log.info("ENABLED - Enabled post -{}", postStateManager.getPostId());
+        History history = postStateManager.handleState();
         historyRepository.save(history);
     }
+    @Async
     @JmsListener(destination = FAILED_QUEUE)
-    private void failedStatusListener(Long postId){
-        PostManager postManager = new PostManager(new Post(postId), FAILED_QUEUE);
-        setFailedStatus(postManager);
+    public void failedStatusListener(History history)  {
+        PostStateManager postStateManager = new PostStateManager(
+                new Post(history.getPostId(), List.of(history)), FAILED_QUEUE);
+        setFailedStatus(postStateManager);
     }
-
-    private void setFailedStatus(PostManager postManager) {
-        log.info("FAILED - Failed to found post/comments -{}", postManager.getPostId());
-        History history = postManager.handleState();
+    @Async
+    public void setFailedStatus(PostStateManager postStateManager) {
+        log.info("FAILED - Failed to found post/comments -{}", postStateManager.getPostId());
+        History history = postStateManager.handleState();
         historyRepository.save(history);
-        setDisabledStatus(postManager);
+        setDisabledStatus(postStateManager);
     }
-
-    private void setDisabledStatus(PostManager postManager) {
-        log.info("DISABLED - Disabled post -{}", postManager.getPostId());
-        History history = postManager.handleState();
+    @Async
+    public void setDisabledStatus(PostStateManager postStateManager) {
+        log.info("DISABLED - Disabled post -{}", postStateManager.getPostId());
+        History history = postStateManager.handleState();
         historyRepository.save(history);
     }
-
-    private void setUpdatingStatus(PostManager postManager) {
-        log.info("UPDATING - Updating post -{}", postManager.getPostId());
-        History history = postManager.handleState();
+    @Async
+    public void setUpdatingStatus(PostStateManager postStateManager) {
+        log.info("UPDATING - Updating post -{}", postStateManager.getPostId());
+        History history = postStateManager.handleState();
         historyRepository.save(history);
-        setPostFindStatus(postManager);
+        setPostFindStatus(postStateManager);
     }
 }

@@ -15,7 +15,7 @@ public class PostHistoryControllerImpl implements PostHistoryController {
 
   private final PostHistoryService service;
   @Override
-  public ResponseEntity<Void> process(Long id) throws InterruptedException {
+  public ResponseEntity<Void> process(Long id) {
     log.info("PROCESS - request received for post -{}", id);
     service.process(id);
     return ResponseEntity.status(201).build();

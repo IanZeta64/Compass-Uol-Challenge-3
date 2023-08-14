@@ -3,10 +3,7 @@ package br.com.compasso.posthistoryapi.client.Dto;
 import br.com.compasso.posthistoryapi.constants.GlobalConstants;
 import br.com.compasso.posthistoryapi.entity.Comment;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,6 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @ToString
+@EqualsAndHashCode
 public class CommentDto  {
 
 

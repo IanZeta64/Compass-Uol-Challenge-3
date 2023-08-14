@@ -1,7 +1,6 @@
 package br.com.compasso.posthistoryapi.message.publisher;
 
 import br.com.compasso.posthistoryapi.entity.History;
-import br.com.compasso.posthistoryapi.manager.PostManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,7 @@ public class MessageProducer<T> {
     jmsTemplate.convertAndSend(queueName, postId);
   }
 
-//  public void sendObjectMessage(String queueName, List<History> postManager) {
-//    jmsTemplate.convertAndSend(queueName, postManager);
-//  }
+  public void sendObjectMessage(String queueName, History history) {
+    jmsTemplate.convertAndSend(queueName, history);
+  }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public interface PostHistoryController {
 
   @PostMapping("/{id}")
-  @PreAuthorize("hasRole('USER')")
+  @PreAuthorize("hasAnyRole('USER','ADMIN')")
   ResponseEntity<Void> process(@PathVariable
             @Min(value = 1, message = "post id must be at least 1")
             @Max(value = 100, message = "post id must be at most 100")
@@ -35,7 +35,7 @@ public interface PostHistoryController {
                                  Long id);
 
   @GetMapping
-  @PreAuthorize("hasRole('USER')")
+  @PreAuthorize("hasAnyRole('USER','ADMIN')")
   ResponseEntity<List<PostDtoResponse>> findAll();
 
 }

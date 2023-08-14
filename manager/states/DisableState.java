@@ -1,9 +1,9 @@
-package br.com.compasso.posthistoryapi.manager.states;
+package br.com.compasso.posthistoryapi.statemanager.states;
 
 import br.com.compasso.posthistoryapi.entity.History;
 import br.com.compasso.posthistoryapi.enums.Status;
 import br.com.compasso.posthistoryapi.exceptions.ChangeStatusHistoryException;
-import br.com.compasso.posthistoryapi.manager.PostManager;
+import br.com.compasso.posthistoryapi.statemanager.PostManager;
 
 public class DisableState implements PostState {
   @Override
