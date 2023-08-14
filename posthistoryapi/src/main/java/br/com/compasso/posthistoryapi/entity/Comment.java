@@ -1,15 +1,10 @@
 package br.com.compasso.posthistoryapi.entity;
-import br.com.compasso.posthistoryapi.client.Dto.CommentDto;
-import br.com.compasso.posthistoryapi.constants.GlobalConstants;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import br.com.compasso.posthistoryapi.client.dto.CommentDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serial;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "comment")

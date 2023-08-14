@@ -1,17 +1,11 @@
 package br.com.compasso.posthistoryapi.entity;
 
-import br.com.compasso.posthistoryapi.client.Dto.CommentDto;
-import br.com.compasso.posthistoryapi.client.Dto.PostDto;
-import br.com.compasso.posthistoryapi.constants.GlobalConstants;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import br.com.compasso.posthistoryapi.client.dto.PostDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +32,6 @@ public class Post  {
 
   public Post(Long id) {
     this.id = id;
-
     this.comments = new ArrayList<>();
     this.histories = new ArrayList<>();
   }

@@ -14,7 +14,7 @@ public record PostResponse (
   List<History> history
 ) {
   public PostResponse(Post post) {
-    this(post.getId(), post
+    this(post.getPostId(), post
         .getTitle(), post.getBody(),
       post.getComments(),
       post.getHistories());

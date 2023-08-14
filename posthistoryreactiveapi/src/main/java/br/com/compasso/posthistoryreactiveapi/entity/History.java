@@ -5,26 +5,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
-
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.Instant;
 
-@Table("history")
-@AllArgsConstructor
-@NoArgsConstructor
+@Document
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class History {
 
   @Id
-  private Long id;
-
+  private String id;
   private Instant date;
-
   private Status status;
-
-  @Column("post_id")
   private Long postId;
 
   public History(Status status, Long postId) {
@@ -32,4 +26,5 @@ public class History {
     this.postId = postId;
     this.date = Instant.now();
   }
+
 }

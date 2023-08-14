@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="serverdiscovery" />
-        <module name="userapi" />
         <module name="posthistoryapi" />
         <module name="gatewayapi" />
         <module name="posthistoryreactiveapi" />
@@ -18,6 +17,7 @@
       <module name="commentsearchapi" target="17" />
       <module name="postsearchapi" target="17" />
       <module name="requestpublisherapi" target="17" />
+      <module name="userapi" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

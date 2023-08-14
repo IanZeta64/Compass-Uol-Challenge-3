@@ -1,32 +1,14 @@
 package br.com.compasso.posthistoryapi.message.config;
-import br.com.compasso.posthistoryapi.constants.GlobalConstants;
+
 import jakarta.jms.ConnectionFactory;
-
-
-import jakarta.jms.Destination;
-import jakarta.jms.MessageConsumer;
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.broker.BrokerService;
-import org.apache.activemq.command.ActiveMQQueue;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
-
-import org.springframework.jms.connection.CachingConnectionFactory;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.listener.DefaultMessageListenerContainer;
-import org.springframework.jms.listener.MessageListenerContainer;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
-import org.springframework.util.ErrorHandler;
-import org.springframework.web.client.RestTemplate;
-
 @Configuration
 @EnableJms
 //@PropertySource("classpath:application.properties")
